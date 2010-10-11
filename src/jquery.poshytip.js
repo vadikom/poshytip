@@ -25,7 +25,7 @@
 		this.$tip = $(['<div class="',this.opts.className,'">',
 				'<div class="tip-inner tip-bg-image"></div>',
 				'<div class="tip-arrow tip-arrow-top tip-arrow-right tip-arrow-bottom tip-arrow-left"></div>',
-			'</div>'].join(''));
+			'</div>'].join('')).appendTo(document.body);
 		this.$arrow = this.$tip.find('div.tip-arrow');
 		this.$inner = this.$tip.find('div.tip-inner');
 		this.disabled = false;
@@ -41,39 +41,47 @@
 				.data('poshytip', this);
 
 			// hook element events
-			switch (this.opts.showOn) {
-				case 'hover':
-					this.$elm.bind({
-						'mouseenter.poshytip': $.proxy(this.mouseenter, this),
-						'mouseleave.poshytip': $.proxy(this.mouseleave, this)
-					});
-					if (this.opts.alignTo == 'cursor')
-						this.$elm.bind('mousemove.poshytip', $.proxy(this.mousemove, this));
-					if (this.opts.allowTipHover)
-						this.$tip.hover($.proxy(this.clearTimeouts, this), $.proxy(this.hide, this));
-					break;
-				case 'focus':
-					this.$elm.bind({
-						'focus.poshytip': $.proxy(this.show, this),
-						'blur.poshytip': $.proxy(this.hide, this)
-					});
-					break;
+			if (this.opts.showOn != 'none') {
+				this.$elm.bind({
+					'mouseenter.poshytip': $.proxy(this.mouseenter, this),
+					'mouseleave.poshytip': $.proxy(this.mouseleave, this)
+				});
+				switch (this.opts.showOn) {
+					case 'hover':
+						if (this.opts.alignTo == 'cursor')
+							this.$elm.bind('mousemove.poshytip', $.proxy(this.mousemove, this));
+						if (this.opts.allowTipHover)
+							this.$tip.hover($.proxy(this.clearTimeouts, this), $.proxy(this.mouseleave, this));
+						break;
+					case 'focus':
+						this.$elm.bind({
+							'focus.poshytip': $.proxy(this.show, this),
+							'blur.poshytip': $.proxy(this.hide, this)
+						});
+						break;
+				}
 			}
 		},
 		mouseenter: function(e) {
 			if (this.disabled)
 				return true;
 
-			this.clearTimeouts();
 			this.$elm.attr('title', '');
-			this.showTimeout = setTimeout($.proxy(this.show, this), this.opts.showTimeout);
-		},
-		mouseleave: function() {
-			if (this.disabled)
+			if (this.opts.showOn == 'focus')
 				return true;
 
 			this.clearTimeouts();
+			this.showTimeout = setTimeout($.proxy(this.show, this), this.opts.showTimeout);
+		},
+		mouseleave: function(e) {
+			if (this.disabled || this.asyncAnimating && (this.$tip[0] === e.relatedTarget || jQuery.contains(this.$tip[0], e.relatedTarget)))
+				return true;
+
 			this.$elm.attr('title', this.$elm.data('title.poshytip'));
+			if (this.opts.showOn == 'focus')
+				return true;
+
+			this.clearTimeouts();
 			this.hideTimeout = setTimeout($.proxy(this.hide, this), this.opts.hideTimeout);
 		},
 		mousemove: function(e) {
@@ -96,9 +104,8 @@
 			this.reset();
 			this.update();
 			this.display();
-			if(this.opts.timeOnScreen) {
-			  setTimeout($.proxy(this.hide, this), this.opts.timeOnScreen);
-			}
+			if (this.opts.timeOnScreen)
+				setTimeout($.proxy(this.hide, this), this.opts.timeOnScreen);
 		},
 		hide: function() {
 			if (this.disabled || !this.$tip.data('active'))
@@ -112,6 +119,7 @@
 			if (this.opts.fade)
 				this.$tip.css('opacity', this.opacity);
 			this.$arrow[0].className = 'tip-arrow tip-arrow-top tip-arrow-right tip-arrow-bottom tip-arrow-left';
+			this.asyncAnimating = false;
 		},
 		update: function(content) {
 			if (this.disabled)
@@ -215,10 +223,13 @@
 				this.$arrow.css('visibility', 'inherit');
 			}
 
-			if (async)
-				this.$tip.css(currPos).animate({left: this.pos.l, top: this.pos.t}, 200);
-			else
+			if (async) {
+				this.asyncAnimating = true;
+				var self = this;
+				this.$tip.css(currPos).animate({left: this.pos.l, top: this.pos.t}, 200, function() { self.asyncAnimating = false; });
+			} else {
 				this.$tip.css({left: this.pos.l, top: this.pos.t});
+			}
 		},
 		display: function(hide) {
 			var active = this.$tip.data('active');
@@ -261,7 +272,8 @@
 		destroy: function() {
 			this.reset();
 			this.$tip.remove();
-			this.$elm.unbind('poshytip').removeData('title.poshytip').removeData('poshytip');
+			delete this.$tip;
+			this.$elm.unbind('.poshytip').removeData('title.poshytip').removeData('poshytip');
 			tips.splice($.inArray(this, tips), 1);
 		},
 		clearTimeouts: function() {
@@ -397,6 +409,7 @@
 		bgImageFrameSize:	10,		// size in pixels for the background-image (if set in CSS) frame around the inner content of the tip
 		showTimeout:		500,		// timeout before showing the tip (in milliseconds 1000 == 1 second)
 		hideTimeout:		100,		// timeout before hiding the tip
+		timeOnScreen:		0,		// timeout before automatically hiding the tip after showing it (set to > 0 in order to activate)
 		showOn:			'hover',	// handler for showing the tip ('hover', 'focus', 'none') - use 'none' to trigger it manually
 		alignTo:		'cursor',	// align/position the tip relative to ('cursor', 'target')
 		alignX:			'right',	// horizontal alignment for the tip relative to the mouse cursor or the target element

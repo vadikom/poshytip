@@ -282,11 +282,10 @@ div.code-block textarea {
 #content div.code-block a.view-plain, #content div.code-block a.view-plain:visited {
 	display:none;
 	position:absolute;
-	top:1px;
-	right:1px;
-	border:0;
-	padding:0 4px;
-	height:21px;
+	bottom:100%;
+	right:0;
+	border-bottom:1px dashed #d5d5d5;
+	padding:3px 4px;
 	text-align:right;
 	background:#fff;
 	color:#888888;
@@ -295,11 +294,6 @@ div.code-block textarea {
 #content div.code-block a.view-plain:hover {
 	background:#aaa;
 	color:#fff;
-}
-div.code-block a.view-plain span {
-	display:block;
-	margin-top:4px;
-	border-bottom:1px dashed #d5d5d5;
 }
 div.code-block pre {
 	display:block;

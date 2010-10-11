@@ -41,7 +41,7 @@ $(function(){
 				);
 			}
 		})
-		.prepend('<a/>').find('> a').addClass('view-plain').attr('href', '#').html('<span>View plain code</span>')
+		.prepend('<a/>').find('> a').addClass('view-plain').attr('href', '#').text('View plain code')
 		.click(function(){
 			var $link = $(this),
 				$div = $link.parent(),
