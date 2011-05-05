@@ -276,7 +276,10 @@ div.code-block textarea {
 	padding:1px;
 	background:#fff;
 	color:#000;
-	font-family:monospace;
+	font-family:consolas,'lucida console',monaco,'courier new',courier,monospace,mono,serif;
+	font-size:13px;
+	font-weight:normal;
+	font-style:normal;
 	z-index:1000;
 }
 #content div.code-block a.view-plain, #content div.code-block a.view-plain:visited {
@@ -302,8 +305,10 @@ div.code-block pre {
 	overflow:auto;
 	cursor:text;
 	color: #434343;
-	font-weight: normal;
-	font-style: normal;
+	font-family:consolas,'lucida console',monaco,'courier new',courier,monospace,mono,serif;
+	font-size:13px;
+	font-weight:normal;
+	font-style:normal;
 }
 pre.sh_sourceCode .sh_keyword {
 	color: #aa0d91;
