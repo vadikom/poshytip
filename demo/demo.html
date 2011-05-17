@@ -15,11 +15,12 @@
 	<link rel="stylesheet" href="../src/tip-green/tip-green.css" type="text/css" />
 
 	<!-- jQuery and the Poshy Tip plugin files -->
-	<script type="text/javascript" src="includes/jquery-1.4.min.js"></script>
+	<script type="text/javascript" src="includes/jquery-1.4.2.min.js"></script>
 	<script type="text/javascript" src="../src/jquery.poshytip.js"></script>
 
 	<!-- Setup examples on this page -->
 	<script type="text/javascript">
+		//<![CDATA[
 		$(function(){
 
 			$('#demo-basic').poshytip();
@@ -164,11 +165,19 @@
 			});
 			$('#button-show').click(function() { $('#demo-manual-trigger').poshytip('show'); });
 			$('#button-hide').click(function() { $('#demo-manual-trigger').poshytip('hide'); });
+			$('#button-update').click(function() { $('#demo-manual-trigger').poshytip('update', 'I am a new content :)'); });
 			$('#button-disable').click(function() { $('#demo-manual-trigger').poshytip('disable'); });
 			$('#button-enable').click(function() { $('#demo-manual-trigger').poshytip('enable'); });
 			$('#button-destroy').click(function() { $('#demo-manual-trigger').poshytip('destroy'); });
+			$('#demo-live-events > a').poshytip({
+				liveEvents: true
+			});
+			$('#button-live-events').click(function() {
+				$('#demo-live-events').append(', <a title="Hey, there! This is a tooltip." href="#">Hover for a tooltip</a>');
+			});
 
 		});
+		//]]>
 	</script>
 	<style type="text/css">
 		.flickr-thumbs {
@@ -215,7 +224,8 @@
 							</ul>
 						</li>
 						<li><a href="#follow-cursor">Following the Mouse Cursor</a></li>
-						<li><a href="#manual-trigger">Triggering the Tooltip Manually</a></li>
+						<li><a href="#manual-trigger">API Example - Triggering the Tooltip Manually</a></li>
+						<li><a href="#live-events">Using Live Events</a></li>
 					</ul>
 				</li>
 				<li><a href="#options">Options</a></li>
@@ -430,12 +440,12 @@ $('#demo-async-flickr &gt; a').poshytip({
 	alignY: 'bottom',
 	content: function(updateCallback) {
 		var rel = $(this).attr('rel');
-		if (flickrFeedsCache[rel] && flickrFeedsCache[rel].container)
+		if (flickrFeedsCache[rel] &amp;&amp; flickrFeedsCache[rel].container)
 			return flickrFeedsCache[rel].container;
 		if (!flickrFeedsCache[rel]) {
 			flickrFeedsCache[rel] = { container: null };
 			var tagsComma = rel.substring(4).replace('-', ',');
-			$.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?tags=' + tagsComma + '&tagmode=all&format=json&jsoncallback=?',
+			$.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?tags=' + tagsComma + '&amp;tagmode=all&amp;format=json&amp;jsoncallback=?',
 				function(data) {
 					var container = $('&lt;div/&gt;').addClass('flickr-thumbs');
 					$.each(data.items, function(i, item) {
@@ -483,13 +493,13 @@ $('#demo-async-flickr &gt; a').poshytip({
 });</pre>
 			</div>
 
-			<h3 id="manual-trigger">Triggering the Tooltip Manually</h3>
+			<h3 id="manual-trigger">API Example - Triggering the Tooltip Manually</h3>
 
 			<p>If you like, you can add a tooltip to some element(s) and configure it to not be triggered automatically on hover or focus/blur by using the <code>showOn: 'none'</code> option. You can then control the tooltip manually via the available methods.</p>
 
 			<!-- #demo-manual-trigger -->
 			<p><a id="demo-manual-trigger" href="#">This link has a tooltip that is not triggered automatically</a></p>
-			<p><button id="button-show">Show</button> <button id="button-hide">Hide</button> <button id="button-disable">Disable</button> <button id="button-enable">Enable</button> <button id="button-destroy">Destroy</button></p>
+			<p><button id="button-show">Show</button> <button id="button-hide">Hide</button> <button id="button-update">Update Content</button> <button id="button-disable">Disable</button> <button id="button-enable">Enable</button> <button id="button-destroy">Destroy</button></p>
 			<div class="code-block">
 			<pre class="sh_javascript">$('#demo-manual-trigger').poshytip({
 	content: 'Hey, there! This is a tooltip.',
@@ -501,9 +511,26 @@ $('#demo-async-flickr &gt; a').poshytip({
 });
 $('#button-show').click(function() { $('#demo-manual-trigger').poshytip('show'); });
 $('#button-hide').click(function() { $('#demo-manual-trigger').poshytip('hide'); });
+$('#button-update').click(function() { $('#demo-manual-trigger').poshytip('update', 'I am a new content :)'); });
 $('#button-disable').click(function() { $('#demo-manual-trigger').poshytip('disable'); });
 $('#button-enable').click(function() { $('#demo-manual-trigger').poshytip('enable'); });
 $('#button-destroy').click(function() { $('#demo-manual-trigger').poshytip('destroy'); });</pre>
+			</div>
+
+			<h3 id="live-events">Using Live Events</h3>
+
+			<p>You can set the <code>liveEvents: true</code> option to use live events. Note that the API methods (except 'destroy') won't work reliably in such case. They will only work for the elements for which the tooltip has been initialized (i.e. shown at least once). Live events are supported in jQuery 1.4.2+.</p>
+
+			<!-- #demo-live-events -->
+			<p id="demo-live-events"><a title="Hey, there! This is a tooltip." href="#">Hover for a tooltip</a></p>
+			<p><button id="button-live-events">Add Another Link</button></p>
+			<div class="code-block">
+			<pre class="sh_javascript">$('#demo-live-events &gt; a').poshytip({
+	liveEvents: true
+});
+$('#button-live-events').click(function() {
+	$('#demo-live-events').append(', &lt;a title="Hey, there! This is a tooltip." href="#"&gt;Hover for a tooltip&lt;/a&gt;');
+});</pre>
 			</div>
 
 			<h2 id="options">Options</h2>
@@ -529,6 +556,9 @@ $('#button-destroy').click(function() { $('#demo-manual-trigger').poshytip('dest
 
 				<dt><strong>showOn</strong> <i>String</i></dt>
 				<dd><div class="possible-values">Possible Values: <span>'hover', 'focus', 'none'</span></div>Handler for showing the tip. Use <code>'none'</code> if you would like to trigger the tooltip just manually (i.e. by calling the <code>'show'</code> and <code>'hide'</code> methods).</dd>
+
+				<dt><strong>liveEvents</strong> <i>Boolean</i></dt>
+				<dd>Use live events.<br /><br />Note that the API methods (except 'destroy') won't work reliably when live events are used. They will only work for the elements for which the tooltip has been initialized (i.e. shown at least once). Live events are supported in jQuery 1.4.2+.</dd>
 
 				<dt><strong>alignTo</strong> <i>String</i></dt>
 				<dd><div class="possible-values">Possible Values: <span>'cursor', 'target'</span></div>Align/position the tip relative to</dd>
@@ -570,20 +600,23 @@ $('#button-destroy').click(function() { $('#demo-manual-trigger').poshytip('dest
 			<h2 id="methods">Methods</h2>
 
 			<dl class="options">
-				<dt><strong>show</strong></dt>
-				<dd><div class="signature">.poshytip('show')</div>Manually show the tooltip. Make sure the <code>alignTo</code> option is set to <code>'target'</code> in order the tooltip to be properly positioned when you trigger it.</dd>
+				<dt><strong>.poshytip('show')</strong></dt>
+				<dd>Manually show the tooltip. Make sure the <code>alignTo</code> option is set to <code>'target'</code> in order the tooltip to be properly positioned when you trigger it.</dd>
 
-				<dt><strong>hide</strong></dt>
-				<dd><div class="signature">.poshytip('hide')</div>Manually hide the tooltip.</dd>
+				<dt><strong>.poshytip('hide')</strong></dt>
+				<dd>Manually hide the tooltip.</dd>
 
-				<dt><strong>disable</strong></dt>
-				<dd><div class="signature">.poshytip('disable')</div>Disable the tooltip.</dd>
+				<dt><strong>.poshytip('update', content, [ dontOverwriteOption ] )</strong></dt>
+				<dd>Update the tooltip content at any time.<div class="signature"><strong>content</strong> '[title]', 'string', element, function(updateCallback){...}, jQuery<br /><strong>dontOverwriteOption</strong> (optional) A boolean flag - if set to <code>true</code> the content will be updated just temporary while the tooltip is active. The next time it is shown again, the default content will be used.</div>Examples:<br /> - Update content permanently (works even when the tooltip is not active):<div class="signature">.poshytip('update', 'New permanent content')</div> - Update content temporary while the tooltip is active:<div class="signature">.poshytip('update', 'Temporary content', true)</div></dd>
 
-				<dt><strong>enable</strong></dt>
-				<dd><div class="signature">.poshytip('enable')</div>Enable the tooltip.</dd>
+				<dt><strong>.poshytip('disable')</strong></dt>
+				<dd>Disable the tooltip.</dd>
 
-				<dt><strong>destroy</strong></dt>
-				<dd><div class="signature">.poshytip('destroy')</div>Destroy completely the tooltip functionality.</dd>
+				<dt><strong>.poshytip('enable')</strong></dt>
+				<dd>Enable the tooltip.</dd>
+
+				<dt><strong>.poshytip('destroy')</strong></dt>
+				<dd>Destroy completely the tooltip functionality.</dd>
 			</dl>
 
 			<h2 id="notes">Notes</h2>
@@ -602,7 +635,7 @@ $('#button-destroy').click(function() { $('#demo-manual-trigger').poshytip('dest
 
 			<h2 id="download">Download</h2>
 
-			<p>Download link: <a href="http://vadikom.com/files/?file=poshytip/poshytip-1.0.zip">http://vadikom.com/files/?file=poshytip/poshytip-1.0.zip</a></p>
+			<p>Download link: <a href="http://vadikom.com/files/?file=poshytip/poshytip-1.1.zip">http://vadikom.com/files/?file=poshytip/poshytip-1.1.zip</a></p>
 
 			<h3>Git</h3>
 
@@ -617,7 +650,7 @@ $('#button-destroy').click(function() { $('#demo-manual-trigger').poshytip('dest
 
 			<h2 id="donate">Donate</h2>
 
-			<p>If you appreciate this script, you can support me by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal@vadikom.com&no_shipping=1&currency_code=USD&item_name=Poshy+Tip+jQuery+Plugin+Development" rel="nofollow">donating a small amount</a> through PayPal or just by <a href="http://www.addtoany.com/share_save?linkname=Poshy%20Tip%20-%20Tooltip%20Plugin%20for%20jQuery%20-%20Vadikom&linkurl=http://vadikom.com/tools/poshy-tip-jquery-plugin-for-stylish-tooltips/" rel="nofollow">spreading the word</a> about it. Your support is highly appreciated!</p>
+			<p>If you appreciate this script, you can support me by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=paypal@vadikom.com&amp;no_shipping=1&amp;currency_code=USD&amp;item_name=Poshy+Tip+jQuery+Plugin+Development" rel="nofollow">donating a small amount</a> through PayPal or just by <a href="http://www.addtoany.com/share_save?linkname=Poshy%20Tip%20-%20Tooltip%20Plugin%20for%20jQuery%20-%20Vadikom&amp;linkurl=http://vadikom.com/tools/poshy-tip-jquery-plugin-for-stylish-tooltips/" rel="nofollow">spreading the word</a> about it. Your support is highly appreciated!</p>
 		</div>
 
 	</div>

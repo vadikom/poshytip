@@ -1,7 +1,7 @@
 /*
- * Poshy Tip jQuery plugin v1.0
+ * Poshy Tip jQuery plugin v1.1
  * http://vadikom.com/tools/poshy-tip-jquery-plugin-for-stylish-tooltips/
- * Copyright 2010, Vasil Dinkov, http://vadikom.com/
+ * Copyright 2010-2011, Vasil Dinkov, http://vadikom.com/
  */
 
 (function($) {
@@ -29,6 +29,7 @@
 		this.$arrow = this.$tip.find('div.tip-arrow');
 		this.$inner = this.$tip.find('div.tip-inner');
 		this.disabled = false;
+		this.content = null;
 		this.init();
 	};
 
@@ -37,7 +38,8 @@
 			tips.push(this);
 
 			// save the original title and a reference to the Poshytip object
-			this.$elm.data('title.poshytip', this.$elm.attr('title'))
+			var title = this.$elm.attr('title');
+			this.$elm.data('title.poshytip', title !== undefined ? title : null)
 				.data('poshytip', this);
 
 			// hook element events
@@ -77,7 +79,9 @@
 			if (this.disabled || this.asyncAnimating && (this.$tip[0] === e.relatedTarget || jQuery.contains(this.$tip[0], e.relatedTarget)))
 				return true;
 
-			this.$elm.attr('title', this.$elm.data('title.poshytip'));
+			var title = this.$elm.data('title.poshytip');
+			if (title !== null)
+				this.$elm.attr('title', title);
 			if (this.opts.showOn == 'focus')
 				return true;
 
@@ -121,28 +125,32 @@
 			this.$arrow[0].className = 'tip-arrow tip-arrow-top tip-arrow-right tip-arrow-bottom tip-arrow-left';
 			this.asyncAnimating = false;
 		},
-		update: function(content) {
+		update: function(content, dontOverwriteOption) {
 			if (this.disabled)
 				return;
 
 			var async = content !== undefined;
 			if (async) {
+				if (!dontOverwriteOption)
+					this.opts.content = content;
 				if (!this.$tip.data('active'))
 					return;
 			} else {
 				content = this.opts.content;
 			}
 
-			this.$inner.contents().detach();
-			var self = this;
-			this.$inner.append(
-				typeof content == 'function' ?
+			// update content only if it has been changed since last time
+			var self = this,
+				newContent = typeof content == 'function' ?
 					content.call(this.$elm[0], function(newContent) {
 						self.update(newContent);
 					}) :
-					content == '[title]' ? this.$elm.data('title.poshytip') : content
-			);
-			
+					content == '[title]' ? this.$elm.data('title.poshytip') : content;
+			if (this.content !== newContent) {
+				this.$inner.empty().append(newContent);
+				this.content = newContent;
+			}
+
 			this.refresh(async);
 		},
 		refresh: function(async) {
@@ -210,7 +218,9 @@
 				this.$tip.add($table).width(tipW).eq(0).find('td').eq(3).width('100%');
 			} else if ($table[0]) {
 				// fix the table width if we are using a background image
-				$table.width('auto').find('td').eq(3).width('auto').end().end().width(this.$tip.width()).find('td').eq(3).width('100%');
+				// IE9, FF4 use float numbers for width/height so use getComputedStyle for them to avoid text wrapping
+				// for details look at: http://vadikom.com/dailies/offsetwidth-offsetheight-useless-in-ie9-firefox4/
+				$table.width('auto').find('td').eq(3).width('auto').end().end().width(document.defaultView && document.defaultView.getComputedStyle && parseFloat(document.defaultView.getComputedStyle(this.$tip[0], null).width) || this.$tip.width()).find('td').eq(3).width('100%');
 			}
 			this.tipOuterW = this.$tip.outerWidth();
 			this.tipOuterH = this.$tip.outerHeight();
@@ -250,8 +260,8 @@
 						arr = 'right';
 					}
 					var val = parseInt(this.$tip.css(prop));
-					from[prop] = val + (hide ? 0 : this.opts.slideOffset * (this.pos.arrow == arr ? -1 : 1));
-					to[prop] = val + (hide ? this.opts.slideOffset * (this.pos.arrow == arr ? 1 : -1) : 0);
+					from[prop] = val + (hide ? 0 : (this.pos.arrow == arr ? -this.opts.slideOffset : this.opts.slideOffset));
+					to[prop] = val + (hide ? (this.pos.arrow == arr ? this.opts.slideOffset : -this.opts.slideOffset) : 0) + 'px';
 				}
 				if (this.opts.fade) {
 					from.opacity = hide ? this.$tip.css('opacity') : 0;
@@ -273,6 +283,7 @@
 			this.reset();
 			this.$tip.remove();
 			delete this.$tip;
+			this.content = null;
 			this.$elm.unbind('.poshytip').removeData('title.poshytip').removeData('poshytip');
 			tips.splice($.inArray(this, tips), 1);
 		},
@@ -373,12 +384,18 @@
 		}
 	};
 
-	$.fn.poshytip = function(options){
+	$.fn.poshytip = function(options) {
 		if (typeof options == 'string') {
+			var args = arguments,
+				method = options;
+			Array.prototype.shift.call(args);
+			// unhook live events if 'destroy' is called
+			if (method == 'destroy')
+				this.die('mouseenter.poshytip').die('focus.poshytip');
 			return this.each(function() {
 				var poshytip = $(this).data('poshytip');
-				if (poshytip && poshytip[options])
-					poshytip[options]();
+				if (poshytip && poshytip[method])
+					poshytip[method].apply(poshytip, args);
 			});
 		}
 
@@ -397,6 +414,28 @@
 				'div.',opts.className,' div.tip-arrow{visibility:hidden;position:absolute;overflow:hidden;font:1px/1px sans-serif;}',
 			'</style>'].join('')).appendTo('head');
 
+		// check if we need to hook live events
+		if (opts.liveEvents && opts.showOn != 'none') {
+			var deadOpts = $.extend({}, opts, { liveEvents: false });
+			switch (opts.showOn) {
+				case 'hover':
+					this.live('mouseenter.poshytip', function() {
+						var $this = $(this);
+						if (!$this.data('poshytip'))
+							$this.poshytip(deadOpts).poshytip('mouseenter');
+					});
+					break;
+				case 'focus':
+					this.live('focus.poshytip', function() {
+						var $this = $(this);
+						if (!$this.data('poshytip'))
+							$this.poshytip(deadOpts).poshytip('show');
+					});
+					break;
+			}
+			return this;
+		}
+
 		return this.each(function() {
 			new $.Poshytip(this, opts);
 		});
@@ -411,6 +450,7 @@
 		hideTimeout:		100,		// timeout before hiding the tip
 		timeOnScreen:		0,		// timeout before automatically hiding the tip after showing it (set to > 0 in order to activate)
 		showOn:			'hover',	// handler for showing the tip ('hover', 'focus', 'none') - use 'none' to trigger it manually
+		liveEvents:		false,		// use live events
 		alignTo:		'cursor',	// align/position the tip relative to ('cursor', 'target')
 		alignX:			'right',	// horizontal alignment for the tip relative to the mouse cursor or the target element
 							// ('right', 'center', 'left', 'inner-left', 'inner-right') - 'inner-*' matter if alignTo:'target'
