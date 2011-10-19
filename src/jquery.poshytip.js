@@ -233,10 +233,10 @@
 				this.$arrow.css('visibility', 'inherit');
 			}
 
-			if (async) {
+			if (async && this.opts.refreshAniDuration) {
 				this.asyncAnimating = true;
 				var self = this;
-				this.$tip.css(currPos).animate({left: this.pos.l, top: this.pos.t}, 200, function() { self.asyncAnimating = false; });
+				this.$tip.css(currPos).animate({left: this.pos.l, top: this.pos.t}, this.opts.refreshAniDuration, function() { self.asyncAnimating = false; });
 			} else {
 				this.$tip.css({left: this.pos.l, top: this.pos.t});
 			}
@@ -464,7 +464,8 @@
 		slide: 			true,		// use slide animation
 		slideOffset: 		8,		// slide animation offset
 		showAniDuration: 	300,		// show animation duration - set to 0 if you don't want show animation
-		hideAniDuration: 	300		// hide animation duration - set to 0 if you don't want hide animation
+		hideAniDuration: 	300,		// hide animation duration - set to 0 if you don't want hide animation
+		refreshAniDuration:	200		// refresh animation duration - set to 0 if you don't want hide animation
 	};
 
 })(jQuery);
