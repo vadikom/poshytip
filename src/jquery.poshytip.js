@@ -1,5 +1,5 @@
 /*
- * Poshy Tip jQuery plugin v1.1
+ * Poshy Tip jQuery plugin v1.1+
  * http://vadikom.com/tools/poshy-tip-jquery-plugin-for-stylish-tooltips/
  * Copyright 2010-2011, Vasil Dinkov, http://vadikom.com/
  */
@@ -465,7 +465,7 @@
 		slideOffset: 		8,		// slide animation offset
 		showAniDuration: 	300,		// show animation duration - set to 0 if you don't want show animation
 		hideAniDuration: 	300,		// hide animation duration - set to 0 if you don't want hide animation
-		refreshAniDuration:	200		// refresh animation duration - set to 0 if you don't want hide animation
+		refreshAniDuration:	200		// refresh animation duration - set to 0 if you don't want animation when updating the tooltip asynchronously
 	};
 
 })(jQuery);
