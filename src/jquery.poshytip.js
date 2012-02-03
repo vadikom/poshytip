@@ -108,8 +108,10 @@
 			this.reset();
 			this.update();
 			this.display();
-			if (this.opts.timeOnScreen)
-				setTimeout($.proxy(this.hide, this), this.opts.timeOnScreen);
+			if (this.opts.timeOnScreen) {
+				this.clearTimeouts();
+				this.hideTimeout = setTimeout($.proxy(this.hide, this), this.opts.timeOnScreen);
+			}
 		},
 		hide: function() {
 			if (this.disabled || !this.$tip.data('active'))
