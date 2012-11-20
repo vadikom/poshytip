@@ -25,9 +25,11 @@
 		this.$tip = $(['<div class="',this.opts.className,'">',
 				'<div class="tip-inner tip-bg-image"></div>',
 				'<div class="tip-arrow tip-arrow-top tip-arrow-right tip-arrow-bottom tip-arrow-left"></div>',
+				'<div class="tip-close tip-close-icon" title="'+this.opts.closeTitle+'"></div>',
 			'</div>'].join('')).appendTo(document.body);
 		this.$arrow = this.$tip.find('div.tip-arrow');
 		this.$inner = this.$tip.find('div.tip-inner');
+		this.$close = this.$tip.find('div.tip-close');
 		this.disabled = false;
 		this.content = null;
 		this.init();
@@ -63,6 +65,18 @@
 						break;
 				}
 			}
+			
+			//add close
+			if(this.opts.closeDisplay){
+				this.$close.css('display', 'block');
+			}
+			
+			//add close function
+			var closeF =  this.opts.closeAfterFunction;
+			var self = this;
+			typeof closeF == 'function' ?
+					this.$close.click(function(){self.hide();closeF.call()}) :
+						this.$close.click(function(){self.hide();})
 		},
 		mouseenter: function(e) {
 			if (this.disabled)
@@ -148,6 +162,13 @@
 						self.update(newContent);
 					}) :
 					content == '[title]' ? this.$elm.data('title.poshytip') : content;
+			
+			//add icon by size and type
+			var iconSize = this.opts.iconSize !== "" ? "-"+this.opts.iconSize : ""
+			newContent = this.opts.iconType !== "" ?
+						'<span class="ui-tiptext'+iconSize+' ui-tiptext-'+this.opts.iconType+''+iconSize+'"><span class="ui-tiptext-icon'+iconSize+'"></span></span>'.concat(newContent)
+						 : newContent;	
+						
 			if (this.content !== newContent) {
 				this.$inner.empty().append(newContent);
 				this.content = newContent;
@@ -467,7 +488,12 @@
 		slideOffset: 		8,		// slide animation offset
 		showAniDuration: 	300,		// show animation duration - set to 0 if you don't want show animation
 		hideAniDuration: 	300,		// hide animation duration - set to 0 if you don't want hide animation
-		refreshAniDuration:	200		// refresh animation duration - set to 0 if you don't want animation when updating the tooltip asynchronously
+		refreshAniDuration:	200,		// refresh animation duration - set to 0 if you don't want animation when updating the tooltip asynchronously
+		closeDisplay:false,	//close icon
+		closeAfterFunction:null,	//after close function,you can remember close status to cookie for not opened 
+		closeTitle:'',	//close hover for title
+		iconType:'',	//icon type 'message' 'stop' 'success' 'error' 'warning' 'question' 'stop' 'wait' if '' no icons
+		iconSize:''		//icon size '' or 'big'
 	};
 
 })(jQuery);
