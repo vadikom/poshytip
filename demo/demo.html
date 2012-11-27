@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<title>Poshy Tip jQuery Plugin Demo Page</title>
-	<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
 
 	<!-- Tooltip classes -->
@@ -20,7 +20,7 @@
 
 	<!-- jQuery and the Poshy Tip plugin files -->
 	<script type="text/javascript" src="includes/jquery-1.4.2.min.js"></script>
-	<script type="text/javascript" src="../src/jquery.poshytip.min.js"></script>
+	<script type="text/javascript" src="../src/jquery.poshytip.js"></script>
 
 	<!-- Setup examples on this page -->
 	<script type="text/javascript">
@@ -92,6 +92,34 @@
 			$("#button-show-tip-yellowdeep").click(function(){
 				$('#demo-tip-yellowdeep').poshytip('show')
 			});
+
+			$('#demo-tip-window-center').poshytip({
+				className: 'tip-yellowdeep',
+					showTimeout: 1,
+					hideAniDuration:300,
+					alignTo: 'window-center',
+					alignX: 'center',
+					offsetX: 0,
+					offsetY: 5,
+					showOn: 'none',
+					allowTipHover: false,
+					fade:true,
+					slide:true,
+					closeDisplay:false,
+					closeAfterFunction:function(){alert('close after do sth...')},
+					closeTitle:"I know~~",
+					iconType:'loading',
+					iconSize:'',
+					mask:true,
+					maskElement:'body',
+					content:function(){
+						return "loading..."
+					}
+			});
+			$("#button-show-window-center").click(function(){
+				$('#demo-tip-window-center').poshytip('show')
+			});
+			
 			$('#demo-form-name').poshytip({
 				className: 'tip-yellowsimple',
 				showOn: 'focus',
@@ -389,6 +417,33 @@
 					}
 });</pre>
 			</div>
+			
+			<!-- #demo-tip-window-center -->
+			<p><a id="demo-tip-window-center">.demo-tip-window-center</a></p>
+			<p><button id="button-show-window-center">Show</button></p>
+			<div class="code-block">
+			<pre class="sh_javascript">$('#demo-tip-window-center').poshytip({
+				className: 'tip-yellowdeep',
+					showTimeout: 1,
+					hideAniDuration:300,
+					alignTo: 'window-center',
+					alignX: 'center',
+					offsetX: 0,
+					offsetY: 5,
+					showOn: 'none',
+					allowTipHover: false,
+					fade:true,
+					slide:true,
+					closeDisplay:true,
+					closeAfterFunction:function(){alert('close after do sth...')},
+					closeTitle:"I know~~",
+					iconType:'warning',
+					iconSize:'big',
+					content:function(){
+						return "Hey, there! This is a window-center tooltip."
+					}
+});</pre>
+			</div>
 
 			<h3 id="form-tooltips">Form Tooltips (with varying positioning)</h3>
 
@@ -668,6 +723,12 @@ $('#button-live-events').click(function() {
 				
 				<dt><strong>iconSize</strong> <i>String</i></dt>
 				<dd>icon size ex: '' or 'big'.</dd>
+				
+				<dt><strong>mask</strong> <i>Boolean</i></dt>
+				<dd>mask sth.</dd>
+				
+				<dt><strong>maskElement</strong> <i>element String</i></dt>
+				<dd>mask element.</dd>
 			</dl>
 
 			<h2 id="methods">Methods</h2>
