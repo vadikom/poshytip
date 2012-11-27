@@ -75,8 +75,8 @@
 			var closeF =  this.opts.closeAfterFunction;
 			var self = this;
 			typeof closeF == 'function' ?
-					this.$close.click(function(){self.hide();closeF.call()}) :
-						this.$close.click(function(){self.hide();})
+					this.$close.click(function(){self.display(true);closeF.call()}) :
+						this.$close.click(function(){self.display(true);})
 		},
 		mouseenter: function(e) {
 			if (this.disabled)
@@ -293,6 +293,15 @@
 				this.$tip.css(from).animate(to, this.opts[hide ? 'hideAniDuration' : 'showAniDuration']);
 			}
 			hide ? this.$tip.queue($.proxy(this.reset, this)) : this.$tip.css('visibility', 'inherit');
+			if(hide&&this.opts.mask){//if mask
+				var element = $(this.opts.maskElement);
+				if(element.hasClass("masked")){
+					element.find(".loadmask-msg,.loadmask").remove();
+					element.removeClass("masked");
+					element.removeClass("masked-relative");
+					element.find("select").removeClass("masked-hidden");
+				}
+			}
 			this.$tip.data('active', !active);
 		},
 		disable: function() {
@@ -332,6 +341,46 @@
 			if (this.opts.alignTo == 'cursor') {
 				xL = xC = xR = this.eventX;
 				yT = yC = yB = this.eventY;
+			}else if(this.opts.alignTo == 'window-center'){
+				var x = (win.w-this.tipOuterW)/2;
+				var y = ie6 ? (win.h/2+win.t) : '50%';//ie6不支持fixed的
+				pos.l = x;
+				pos.t = y;
+				this.pos = pos;
+				if(!ie6){
+					this.$tip.css('position','fixed'); 
+				}
+				//if alignTo window-center,mask is avaible
+				if(this.opts.mask){
+					var element = $(this.opts.maskElement);
+					if(element.hasClass("masked")){
+						element.find(".loadmask-msg,.loadmask").remove();
+						element.removeClass("masked");
+						element.removeClass("masked-relative");
+						element.find("select").removeClass("masked-hidden");
+					}
+					if(element.css("position") == "static") {
+						element.addClass("masked-relative");
+					}
+					
+					element.addClass("masked");
+					
+					var maskDiv = $('<div class="loadmask"></div>');
+					
+					//auto height fix for IE
+					if(navigator.userAgent.toLowerCase().indexOf("msie") > -1){
+						maskDiv.height(element.height() + parseInt(element.css("padding-top")) + parseInt(element.css("padding-bottom")));
+						maskDiv.width(element.width() + parseInt(element.css("padding-left")) + parseInt(element.css("padding-right")));
+					}
+					
+					//fix for z-index bug with selects in IE6
+					if(navigator.userAgent.toLowerCase().indexOf("msie 6") > -1){
+						element.find("select").addClass("masked-hidden");
+					}
+					
+					element.append(maskDiv);
+				}
+				return;
 			} else { // this.opts.alignTo == 'target'
 				var elmOffset = this.$elm.offset(),
 					elm = {
@@ -474,7 +523,7 @@
 		timeOnScreen:		0,		// timeout before automatically hiding the tip after showing it (set to > 0 in order to activate)
 		showOn:			'hover',	// handler for showing the tip ('hover', 'focus', 'none') - use 'none' to trigger it manually
 		liveEvents:		false,		// use live events
-		alignTo:		'cursor',	// align/position the tip relative to ('cursor', 'target')
+		alignTo:		'cursor',	// align/position the tip relative to ('cursor', 'target','window-center':window center),
 		alignX:			'right',	// horizontal alignment for the tip relative to the mouse cursor or the target element
 							// ('right', 'center', 'left', 'inner-left', 'inner-right') - 'inner-*' matter if alignTo:'target'
 		alignY:			'top',		// vertical alignment for the tip relative to the mouse cursor or the target element
@@ -493,7 +542,9 @@
 		closeAfterFunction:null,	//after close function,you can remember close status to cookie for not opened 
 		closeTitle:'',	//close hover for title
 		iconType:'',	//icon type 'message' 'stop' 'success' 'error' 'warning' 'question' 'stop' 'wait' if '' no icons
-		iconSize:''		//icon size '' or 'big'
+		iconSize:'',		//icon size '' or 'big'
+		mask:false,//alignTo='window-center' is available
+		maskElement:'body'//mask element, default body
 	};
 
 })(jQuery);
