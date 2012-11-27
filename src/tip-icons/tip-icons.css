@@ -65,6 +65,9 @@
 .ui-tiptext-wait .ui-tiptext-icon {
     background-position:-90px -33px;
 }
+.ui-tiptext-loading .ui-tiptext-icon {
+    background: transparent url('loading.gif') no-repeat;
+}
 /*small*/
 
 /*big*/
@@ -111,6 +114,9 @@
 }
 .ui-tiptext-wait-big .ui-tiptext-icon-big {
     background-position:-198px 0;
+}
+.ui-tiptext-loading-big .ui-tiptext-icon-big {
+    background: transparent url('loading-big.gif') no-repeat;
 }
 /*big*/
 /*tip icons*/
