@@ -5,9 +5,9 @@
 	border-radius:4px;
 	-moz-border-radius:4px;
 	-webkit-border-radius:4px;
-	padding:6px 8px;
+	padding:5px 8px;
 	min-width:50px;
-	max-width:300px;
+	max-width:1000px;
 	color:#000;
 	background-color:#ffff8d;
 	/**
@@ -58,3 +58,45 @@
 	height:9px;
 	background:url(tip-yellowdeep_arrows.gif) no-repeat -27px 0;
 }
+
+/*mask*/
+.loadmask {
+    z-index: 700;
+    position: absolute;
+    top:0;
+    left:0;
+    -moz-opacity: 0.4;
+    opacity: .40;
+    filter: alpha(opacity=40);
+    background-color: #CCC;
+    width: 100%;
+    height: 100%;
+    zoom: 1;
+}
+.loadmask-msg {
+    z-index: 20001;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border:1px solid #6593cf;
+    background: #c3daf9;
+    padding:2px;
+}
+.loadmask-msg div {
+    padding:5px 10px 5px 25px;
+    background: #fbfbfb url('loading.gif') no-repeat 5px 5px;
+    line-height: 16px;
+	border:1px solid #a3bad9;
+    color:#222;
+    cursor:wait;
+}
+.masked {
+    overflow: hidden !important;
+}
+.masked-relative {
+    position: relative !important;
+}
+.masked-hidden {
+    visibility: hidden !important;
+}
+/*mask*/
