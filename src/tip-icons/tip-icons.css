@@ -1,0 +1,122 @@
+/*close icon*/
+.tip-close{
+	font:xx-small arial;
+	position:absolute;
+	top:3px;
+	right:3px;
+	cursor:pointer;
+	background-color: transparent;
+	display: none;
+}
+.tip-close-icon{
+	background:url(tip-icons.png) no-repeat -167px -39px;
+	width:7px;
+	height:8px;
+}
+.tip-close-icon-big{
+	background:url(tip-icons.png) no-repeat -163px -36px;
+	width:14px;
+	height:14px;
+}
+
+/*tip icons*/
+/*small*/
+.ui-tiptext {
+    color: #4D4D4D;
+    position:relative;
+    overflow:hidden;
+    vertical-align:middle;
+    line-height:15px;
+    *line-height:17px;
+    _line-height:15px;
+    line-height:17px\0;
+    zoom:1;
+}
+.ui-tiptext-icon {
+    background: transparent url('tip-icons.png') no-repeat;
+}
+.ui-tiptext-icon {
+    width:15px;
+    height:15px;
+    vertical-align:top;
+    margin-right:8px;
+    display:inline-block;
+    *display:inline;
+    *zoom:1;
+}
+.ui-tiptext-message .ui-tiptext-icon {
+    background-position:0 -33px;
+}
+.ui-tiptext-success .ui-tiptext-icon {
+    background-position:-45px -33px;
+}
+.ui-tiptext-error .ui-tiptext-icon {
+    background-position:-30px -33px;
+}
+.ui-tiptext-warning .ui-tiptext-icon {
+    background-position:-15px -33px;
+}
+.ui-tiptext-question .ui-tiptext-icon {
+    background-position:-60px -33px;
+}
+.ui-tiptext-stop .ui-tiptext-icon {
+    background-position:-75px -33px;
+}
+.ui-tiptext-wait .ui-tiptext-icon {
+    background-position:-90px -33px;
+}
+.ui-tiptext-loading .ui-tiptext-icon {
+    background: transparent url('loading.gif') no-repeat;
+}
+/*small*/
+
+/*big*/
+.ui-tiptext-big {
+    color: #4D4D4D;
+    position:relative;
+    overflow:hidden;
+    vertical-align:middle;
+    line-height:33px;
+    *line-height:35px;
+    _line-height:33px;
+    line-height:37px\0;
+    zoom:1;
+}
+.ui-tiptext-icon-big {
+    background: transparent url('tip-icons.png') no-repeat;
+}
+.ui-tiptext-icon-big {
+    width:33px;
+    height:33px;
+    vertical-align:top;
+    margin-right:8px;
+    display:inline-block;
+    *display:inline;
+    *zoom:1;
+}
+.ui-tiptext-message-big .ui-tiptext-icon-big {
+    background-position:0 0;
+}
+.ui-tiptext-success-big .ui-tiptext-icon-big {
+    background-position:-98px 0;
+}
+.ui-tiptext-error-big .ui-tiptext-icon-big {
+    background-position:-65px 0;
+}
+.ui-tiptext-warning-big .ui-tiptext-icon-big {
+    background-position:-32px 0;
+}
+.ui-tiptext-question-big .ui-tiptext-icon-big {
+    background-position:-131px 0;
+}
+.ui-tiptext-stop-big .ui-tiptext-icon-big {
+    background-position:-165px 0;
+}
+.ui-tiptext-wait-big .ui-tiptext-icon-big {
+    background-position:-198px 0;
+}
+.ui-tiptext-loading-big .ui-tiptext-icon-big {
+    background: transparent url('loading-big.gif') no-repeat;
+}
+/*big*/
+/*tip icons*/

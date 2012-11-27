@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 	<title>Poshy Tip jQuery Plugin Demo Page</title>
-	<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
 
 	<!-- Tooltip classes -->
@@ -13,6 +13,10 @@
 	<link rel="stylesheet" href="../src/tip-yellowsimple/tip-yellowsimple.css" type="text/css" />
 	<link rel="stylesheet" href="../src/tip-twitter/tip-twitter.css" type="text/css" />
 	<link rel="stylesheet" href="../src/tip-green/tip-green.css" type="text/css" />
+	<link rel="stylesheet" href="../src/tip-yellowdeep/tip-yellowdeep.css" type="text/css" />
+	
+	<!-- tip icons classes -->
+	<link rel="stylesheet" href="../src/tip-icons/tip-icons.css" type="text/css" />
 
 	<!-- jQuery and the Poshy Tip plugin files -->
 	<script type="text/javascript" src="includes/jquery-1.4.2.min.js"></script>
@@ -64,6 +68,58 @@
 				offsetY: 16,
 				allowTipHover: false
 			});
+			$('#demo-tip-yellowdeep').poshytip({
+					className: 'tip-yellowdeep',
+					showTimeout: 1,
+					hideAniDuration:300,
+					alignTo: 'target',
+					alignX: 'center',
+					offsetX: 0,
+					offsetY: 5,
+					showOn: 'none',
+					allowTipHover: false,
+					fade:true,
+					slide:true,
+					closeDisplay:true,
+					closeAfterFunction:function(){alert('close after do sth...')},
+					closeTitle:"I know~~",
+					iconType:'warning',
+					iconSize:'',
+					content:function(){
+						return "Hey, there! This is a can close and do sth after close tooltip."
+					}
+				});
+			$("#button-show-tip-yellowdeep").click(function(){
+				$('#demo-tip-yellowdeep').poshytip('show')
+			});
+
+			$('#demo-tip-window-center').poshytip({
+				className: 'tip-yellowdeep',
+					showTimeout: 1,
+					hideAniDuration:300,
+					alignTo: 'window-center',
+					alignX: 'center',
+					offsetX: 0,
+					offsetY: 5,
+					showOn: 'none',
+					allowTipHover: false,
+					fade:true,
+					slide:true,
+					closeDisplay:false,
+					closeAfterFunction:function(){alert('close after do sth...')},
+					closeTitle:"I know~~",
+					iconType:'loading',
+					iconSize:'',
+					mask:true,
+					maskElement:'body',
+					content:function(){
+						return "loading..."
+					}
+			});
+			$("#button-show-window-center").click(function(){
+				$('#demo-tip-window-center').poshytip('show')
+			});
+			
 			$('#demo-form-name').poshytip({
 				className: 'tip-yellowsimple',
 				showOn: 'focus',
@@ -334,6 +390,60 @@
 	allowTipHover: false
 });</pre>
 			</div>
+			
+			<!-- #demo-tip-yellowdeep -->
+			<p><a id="demo-tip-yellowdeep">.tip-yellowdeep</a></p>
+			<p><button id="button-show-tip-yellowdeep">Show</button></p>
+			<div class="code-block">
+			<pre class="sh_javascript">$('#demo-tip-yellowdeep').poshytip({
+				className: 'tip-yellowdeep',
+					showTimeout: 1,
+					hideAniDuration:300,
+					alignTo: 'target',
+					alignX: 'center',
+					offsetX: 0,
+					offsetY: 5,
+					showOn: 'none',
+					allowTipHover: false,
+					fade:true,
+					slide:true,
+					closeDisplay:true,
+					closeAfterFunction:function(){alert('close after do sth...')},
+					closeTitle:"I know~~",
+					iconType:'warning',
+					iconSize:'',
+					content:function(){
+						return "Hey, there! This is a can close and do sth after close tooltip."
+					}
+});</pre>
+			</div>
+			
+			<!-- #demo-tip-window-center -->
+			<p><a id="demo-tip-window-center">.demo-tip-window-center</a></p>
+			<p><button id="button-show-window-center">Show</button></p>
+			<div class="code-block">
+			<pre class="sh_javascript">$('#demo-tip-window-center').poshytip({
+				className: 'tip-yellowdeep',
+					showTimeout: 1,
+					hideAniDuration:300,
+					alignTo: 'window-center',
+					alignX: 'center',
+					offsetX: 0,
+					offsetY: 5,
+					showOn: 'none',
+					allowTipHover: false,
+					fade:true,
+					slide:true,
+					closeDisplay:true,
+					closeAfterFunction:function(){alert('close after do sth...')},
+					closeTitle:"I know~~",
+					iconType:'warning',
+					iconSize:'big',
+					content:function(){
+						return "Hey, there! This is a window-center tooltip."
+					}
+});</pre>
+			</div>
 
 			<h3 id="form-tooltips">Form Tooltips (with varying positioning)</h3>
 
@@ -598,6 +708,27 @@ $('#button-live-events').click(function() {
 
 				<dt><strong>refreshAniDuration</strong> <i>Number</i></dt>
 				<dd>Animation duration when updating the tooltip asynchronously.</dd>
+				
+				<dt><strong>closeDisplay</strong> <i>Boolean</i></dt>
+				<dd>close icon display or not.</dd>
+				
+				<dt><strong>closeAfterFunction</strong> <i>Function</i></dt>
+				<dd>after close function,you can remember close status to cookie for not opened.</dd>
+				
+				<dt><strong>closeTitle</strong> <i>String</i></dt>
+				<dd>close hover for title.</dd>
+				
+				<dt><strong>iconType</strong> <i>String</i></dt>
+				<dd>icon type 'message' 'stop' 'success' 'error' 'warning' 'question' 'stop' 'wait' if '' no icons</dd>
+				
+				<dt><strong>iconSize</strong> <i>String</i></dt>
+				<dd>icon size ex: '' or 'big'.</dd>
+				
+				<dt><strong>mask</strong> <i>Boolean</i></dt>
+				<dd>mask sth.</dd>
+				
+				<dt><strong>maskElement</strong> <i>element String</i></dt>
+				<dd>mask element.</dd>
 			</dl>
 
 			<h2 id="methods">Methods</h2>
