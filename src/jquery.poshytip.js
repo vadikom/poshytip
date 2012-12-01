@@ -185,7 +185,7 @@
 					this.$inner.css({margin: 0, border: 0, padding: 0});
 					bgImage = bgImagePNG = false;
 				} else {
-					this.$tip.prepend('<table border="0" cellpadding="0" cellspacing="0"><tr><td class="tip-top tip-bg-image" colspan="2"><span></span></td><td class="tip-right tip-bg-image" rowspan="2"><span></span></td></tr><tr><td class="tip-left tip-bg-image" rowspan="2"><span></span></td><td></td></tr><tr><td class="tip-bottom tip-bg-image" colspan="2"><span></span></td></tr></table>')
+					this.$tip.prepend('<table class="tip-table" border="0" cellpadding="0" cellspacing="0"><tr><td class="tip-top tip-bg-image" colspan="2"><span></span></td><td class="tip-right tip-bg-image" rowspan="2"><span></span></td></tr><tr><td class="tip-left tip-bg-image" rowspan="2"><span></span></td><td></td></tr><tr><td class="tip-bottom tip-bg-image" colspan="2"><span></span></td></tr></table>')
 						.css({border: 0, padding: 0, 'background-image': 'none', 'background-color': 'transparent'})
 						.find('.tip-bg-image').css('background-image', 'url("' + bgImage[1] +'")').end()
 						.find('td').eq(3).append(this.$inner);
@@ -205,7 +205,7 @@
 				this.opts.fade = false;
 			}
 
-			var $table = this.$tip.find('table');
+			var $table = this.$tip.find('> table.tip-table');
 			if (ie6) {
 				// fix min/max-width in IE6
 				this.$tip[0].style.width = '';
@@ -407,7 +407,7 @@
 		if (!$('#poshytip-css-' + opts.className)[0])
 			$(['<style id="poshytip-css-',opts.className,'" type="text/css">',
 				'div.',opts.className,'{visibility:hidden;position:absolute;top:0;left:0;}',
-				'div.',opts.className,' table, div.',opts.className,' td{margin:0;font-family:inherit;font-size:inherit;font-weight:inherit;font-style:inherit;font-variant:inherit;}',
+				'div.',opts.className,' table.tip-table, div.',opts.className,' table.tip-table td{margin:0;font-family:inherit;font-size:inherit;font-weight:inherit;font-style:inherit;font-variant:inherit;}',
 				'div.',opts.className,' td.tip-bg-image span{display:block;font:1px/1px sans-serif;height:',opts.bgImageFrameSize,'px;width:',opts.bgImageFrameSize,'px;overflow:hidden;}',
 				'div.',opts.className,' td.tip-right{background-position:100% 0;}',
 				'div.',opts.className,' td.tip-bottom{background-position:100% 100%;}',
