@@ -9,7 +9,7 @@
 	var tips = [],
 		reBgImage = /^url\(["']?([^"'\)]*)["']?\);?$/i,
 		rePNG = /\.png$/i,
-		ie6 = $.browser.msie && $.browser.version == 6;
+		ie6 = !!window.createPopup && document.documentElement.currentStyle.minWidth == 'undefined';
 
 	// make sure the tips' position is updated on resize
 	function handleWindowResize() {
@@ -392,8 +392,11 @@
 				method = options;
 			Array.prototype.shift.call(args);
 			// unhook live events if 'destroy' is called
-			if (method == 'destroy')
-				this.die('mouseenter.poshytip').die('focus.poshytip');
+			if (method == 'destroy') {
+				this.die ?
+					this.die('mouseenter.poshytip').die('focus.poshytip') :
+					$(document).undelegate(this.selector, 'mouseenter.poshytip').undelegate(this.selector, 'focus.poshytip');
+			}
 			return this.each(function() {
 				var poshytip = $(this).data('poshytip');
 				if (poshytip && poshytip[method])
@@ -418,21 +421,29 @@
 
 		// check if we need to hook live events
 		if (opts.liveEvents && opts.showOn != 'none') {
-			var deadOpts = $.extend({}, opts, { liveEvents: false });
+			var handler,
+				deadOpts = $.extend({}, opts, { liveEvents: false });
 			switch (opts.showOn) {
 				case 'hover':
-					this.live('mouseenter.poshytip', function() {
+					handler = function() {
 						var $this = $(this);
 						if (!$this.data('poshytip'))
 							$this.poshytip(deadOpts).poshytip('mouseenter');
-					});
+					};
+					// support 1.4.2+ & 1.9+
+					this.live ?
+						this.live('mouseenter.poshytip', handler) :
+						$(document).delegate(this.selector, 'mouseenter.poshytip', handler);
 					break;
 				case 'focus':
-					this.live('focus.poshytip', function() {
+					handler = function() {
 						var $this = $(this);
 						if (!$this.data('poshytip'))
 							$this.poshytip(deadOpts).poshytip('show');
-					});
+					};
+					this.live ?
+						this.live('focus.poshytip', handler) :
+						$(document).delegate(this.selector, 'focus.poshytip', handler);
 					break;
 			}
 			return this;
