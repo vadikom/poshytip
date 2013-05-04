@@ -70,7 +70,8 @@
 				alignTo: 'target',
 				alignX: 'right',
 				alignY: 'center',
-				offsetX: 5
+				offsetX: 5,
+				showTimeout: 100
 			});
 			$('#demo-form-email').poshytip({
 				className: 'tip-yellowsimple',
@@ -78,7 +79,8 @@
 				alignTo: 'target',
 				alignX: 'left',
 				alignY: 'center',
-				offsetX: 5
+				offsetX: 5,
+				showTimeout: 100
 			});
 			$('#demo-form-site').poshytip({
 				className: 'tip-yellowsimple',
@@ -86,7 +88,8 @@
 				alignTo: 'target',
 				alignX: 'inner-left',
 				offsetX: 0,
-				offsetY: 5
+				offsetY: 5,
+				showTimeout: 100
 			});
 			$('#demo-form-subject').poshytip({
 				className: 'tip-yellowsimple',
@@ -95,7 +98,8 @@
 				alignX: 'center',
 				alignY: 'bottom',
 				offsetX: 0,
-				offsetY: 5
+				offsetY: 5,
+				showTimeout: 100
 			});
 			$('#demo-async-timeout').poshytip({
 				content: function(updateCallback) {
@@ -164,7 +168,9 @@
 				offsetY: 5
 			});
 			$('#button-show').click(function() { $('#demo-manual-trigger').poshytip('show'); });
+			$('#button-show-delayed').click(function() { $('#demo-manual-trigger').poshytip('showDelayed', 2000); });
 			$('#button-hide').click(function() { $('#demo-manual-trigger').poshytip('hide'); });
+			$('#button-hide-delayed').click(function() { $('#demo-manual-trigger').poshytip('hideDelayed', 2000); });
 			$('#button-update').click(function() { $('#demo-manual-trigger').poshytip('update', 'I am a new content :)'); });
 			$('#button-disable').click(function() { $('#demo-manual-trigger').poshytip('disable'); });
 			$('#button-enable').click(function() { $('#demo-manual-trigger').poshytip('enable'); });
@@ -351,7 +357,8 @@
 	alignTo: 'target',
 	alignX: 'right',
 	alignY: 'center',
-	offsetX: 5
+	offsetX: 5,
+	showTimeout: 100
 });</pre>
 			</div>
 
@@ -367,7 +374,8 @@
 	alignTo: 'target',
 	alignX: 'left',
 	alignY: 'center',
-	offsetX: 5
+	offsetX: 5,
+	showTimeout: 100
 });</pre>
 			</div>
 
@@ -383,7 +391,8 @@
 	alignTo: 'target',
 	alignX: 'inner-left',
 	offsetX: 0,
-	offsetY: 5
+	offsetY: 5,
+	showTimeout: 100
 });</pre>
 			</div>
 
@@ -400,7 +409,8 @@
 	alignX: 'center',
 	alignY: 'bottom',
 	offsetX: 0,
-	offsetY: 5
+	offsetY: 5,
+	showTimeout: 100
 });</pre>
 			</div>
 
@@ -499,7 +509,7 @@ $('#demo-async-flickr &gt; a').poshytip({
 
 			<!-- #demo-manual-trigger -->
 			<p><a id="demo-manual-trigger" href="#">This link has a tooltip that is not triggered automatically</a></p>
-			<p><button id="button-show">Show</button> <button id="button-hide">Hide</button> <button id="button-update">Update Content</button> <button id="button-disable">Disable</button> <button id="button-enable">Enable</button> <button id="button-destroy">Destroy</button></p>
+			<p><button id="button-show">Show</button> <button id="button-show-delayed">Show in 2 sec.</button> <button id="button-hide">Hide</button> <button id="button-hide-delayed">Hide in 2 sec.</button> <button id="button-update">Update Content</button> <button id="button-disable">Disable</button> <button id="button-enable">Enable</button> <button id="button-destroy">Destroy</button></p>
 			<div class="code-block">
 			<pre class="sh_javascript">$('#demo-manual-trigger').poshytip({
 	content: 'Hey, there! This is a tooltip.',
@@ -510,7 +520,9 @@ $('#demo-async-flickr &gt; a').poshytip({
 	offsetY: 5
 });
 $('#button-show').click(function() { $('#demo-manual-trigger').poshytip('show'); });
+$('#button-show-delayed').click(function() { $('#demo-manual-trigger').poshytip('showDelayed', 2000); });
 $('#button-hide').click(function() { $('#demo-manual-trigger').poshytip('hide'); });
+$('#button-hide-delayed').click(function() { $('#demo-manual-trigger').poshytip('hideDelayed', 2000); });
 $('#button-update').click(function() { $('#demo-manual-trigger').poshytip('update', 'I am a new content :)'); });
 $('#button-disable').click(function() { $('#demo-manual-trigger').poshytip('disable'); });
 $('#button-enable').click(function() { $('#demo-manual-trigger').poshytip('enable'); });
@@ -575,6 +587,9 @@ $('#button-live-events').click(function() {
 				<dt><strong>offsetY</strong> <i>Number</i></dt>
 				<dd>Offset Y pixels from the default position - doesn't matter if <code>alignY:'center'</code></dd>
 
+				<dt><strong>keepInViewport</strong> <i>Boolean</i></dt>
+				<dd>Reposition the tooltip if needed to make sure it always appears inside the viewport.</dd>
+
 				<dt><strong>allowTipHover</strong> <i>Boolean</i></dt>
 				<dd>Allow hovering the tip without hiding it onmouseout of the target - matters only if <code>showOn:'hover'</code></dd>
 
@@ -606,8 +621,14 @@ $('#button-live-events').click(function() {
 				<dt><strong>.poshytip('show')</strong></dt>
 				<dd>Manually show the tooltip. Make sure the <code>alignTo</code> option is set to <code>'target'</code> in order the tooltip to be properly positioned when you trigger it.</dd>
 
+				<dt><strong>.poshytip('showDelayed', [ timeout ] )</strong></dt>
+				<dd>Manually show the tooltip with a delay. Make sure the <code>alignTo</code> option is set to <code>'target'</code> in order the tooltip to be properly positioned when you trigger it.<div class="signature"><strong>timeout</strong> (optional) number - Custom timeout in milliseconds. If not passed, the <code>showTimeout</code> option value is used by default.</div></dd>
+
 				<dt><strong>.poshytip('hide')</strong></dt>
 				<dd>Manually hide the tooltip.</dd>
+
+				<dt><strong>.poshytip('hideDelayed', [ timeout ] )</strong></dt>
+				<dd>Manually hide the tooltip with a delay.<div class="signature"><strong>timeout</strong> (optional) number - Custom timeout in milliseconds. If not passed, the <code>hideTimeout</code> option value is used by default.</div></dd>
 
 				<dt><strong>.poshytip('update', content, [ dontOverwriteOption ] )</strong></dt>
 				<dd>Update the tooltip content at any time.<div class="signature"><strong>content</strong> '[title]', 'string', element, function(updateCallback){...}, jQuery<br /><strong>dontOverwriteOption</strong> (optional) A boolean flag - if set to <code>true</code> the content will be updated just temporary while the tooltip is active. The next time it is shown again, the default content will be used.</div>Examples:<br /> - Update content permanently (works even when the tooltip is not active):<div class="signature">.poshytip('update', 'New permanent content')</div> - Update content temporary while the tooltip is active:<div class="signature">.poshytip('update', 'Temporary content', true)</div></dd>
@@ -638,7 +659,7 @@ $('#button-live-events').click(function() {
 
 			<h2 id="download">Download</h2>
 
-			<p>Download link: <a href="http://vadikom.com/files/?file=poshytip/poshytip-1.1.zip">http://vadikom.com/files/?file=poshytip/poshytip-1.1.zip</a></p>
+			<p>Download link: <a href="http://vadikom.com/files/?file=poshytip/poshytip-1.2.zip">http://vadikom.com/files/?file=poshytip/poshytip-1.2.zip</a></p>
 
 			<h3>Git</h3>
 
