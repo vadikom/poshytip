@@ -630,6 +630,9 @@ $('#button-live-events').click(function() {
 				<dt><strong>.poshytip('hideDelayed', [ timeout ] )</strong></dt>
 				<dd>Manually hide the tooltip with a delay.<div class="signature"><strong>timeout</strong> (optional) number - Custom timeout in milliseconds. If not passed, the <code>hideTimeout</code> option value is used by default.</div></dd>
 
+				<dt><strong>$.Poshytip.hideAll()</strong></dt>
+				<dd>Hide all the tooltips on the page.</dd>
+
 				<dt><strong>.poshytip('update', content, [ dontOverwriteOption ] )</strong></dt>
 				<dd>Update the tooltip content at any time.<div class="signature"><strong>content</strong> '[title]', 'string', element, function(updateCallback){...}, jQuery<br /><strong>dontOverwriteOption</strong> (optional) A boolean flag - if set to <code>true</code> the content will be updated just temporary while the tooltip is active. The next time it is shown again, the default content will be used.</div>Examples:<br /> - Update content permanently (works even when the tooltip is not active):<div class="signature">.poshytip('update', 'New permanent content')</div> - Update content temporary while the tooltip is active:<div class="signature">.poshytip('update', 'Temporary content', true)</div></dd>
 
