@@ -74,6 +74,8 @@
 			if (this.disabled)
 				return true;
 
+			this.updateCursorPos(e);
+
 			this.$elm.attr('title', '');
 			if (this.opts.showOn == 'focus')
 				return true;
@@ -98,8 +100,8 @@
 			if (this.disabled)
 				return true;
 
-			this.eventX = e.pageX;
-			this.eventY = e.pageY;
+			this.updateCursorPos(e);
+
 			if (this.opts.followCursor && this.$tip.data('active')) {
 				this.calcPos();
 				this.$tip.css({left: this.pos.l, top: this.pos.t});
@@ -320,6 +322,10 @@
 				clearTimeout(this.hideTimeout);
 				this.hideTimeout = 0;
 			}
+		},
+		updateCursorPos: function(e) {
+			this.eventX = e.pageX;
+			this.eventY = e.pageY;
 		},
 		calcPos: function() {
 			var pos = {l: 0, t: 0, arrow: ''},
