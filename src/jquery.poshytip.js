@@ -9,7 +9,9 @@
 	var tips = [],
 		reBgImage = /^url\(["']?([^"'\)]*)["']?\);?$/i,
 		rePNG = /\.png$/i,
-		ie6 = !!window.createPopup && document.documentElement.currentStyle.minWidth == 'undefined';
+		IE = !!window.createPopup,
+ 		IE6 = IE && typeof document.documentElement.currentStyle.minWidth == 'undefined',
+		IElt9 = IE && !document.defaultView;
 
 	// make sure the tips' position is updated on resize
 	function handleWindowResize() {
@@ -199,7 +201,7 @@
 			if (bgImage) {
 				var bgImagePNG = rePNG.test(bgImage[1]);
 				// fallback to background-color/padding/border in IE6 if a PNG is used
-				if (ie6 && bgImagePNG) {
+				if (IE6 && bgImagePNG) {
 					this.$tip.css('background-image', 'none');
 					this.$inner.css({margin: 0, border: 0, padding: 0});
 					bgImage = bgImagePNG = false;
@@ -210,13 +212,13 @@
 						.find('td').eq(3).append(this.$inner);
 				}
 				// disable fade effect in IE due to Alpha filter + translucent PNG issue
-				if (bgImagePNG && !$.support.opacity)
+				if (bgImagePNG && IElt9)
 					this.opts.fade = false;
 			}
 			// IE arrow fixes
-			if (arrow && !$.support.opacity) {
+			if (arrow && IElt9) {
 				// disable arrow in IE6 if using a PNG
-				if (ie6 && rePNG.test(arrow[1])) {
+				if (IE6 && rePNG.test(arrow[1])) {
 					arrow = false;
 					this.$arrow.css('background-image', 'none');
 				}
@@ -225,7 +227,7 @@
 			}
 
 			var $table = this.$tip.find('> table.tip-table');
-			if (ie6) {
+			if (IE6) {
 				// fix min/max-width in IE6
 				this.$tip[0].style.width = '';
 				$table.width('auto').find('td').eq(3).width('auto');
