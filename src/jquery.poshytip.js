@@ -24,7 +24,8 @@
 	$.Poshytip = function(elm, options) {
 		this.$elm = $(elm);
 		this.opts = $.extend({}, $.fn.poshytip.defaults, options);
-		this.$tip = $(['<div class="',this.opts.className,'">',
+		var idNameHtml = (('' != this.opts.idName) ? ('id='+this.opts.idName) : '');
+		this.$tip = $(['<div ', idNameHtml,' class="',this.opts.className,'">',
 				'<div class="tip-inner tip-bg-image"></div>',
 				'<div class="tip-arrow tip-arrow-top tip-arrow-right tip-arrow-bottom tip-arrow-left"></div>',
 			'</div>'].join('')).appendTo(document.body);
@@ -492,6 +493,7 @@
 	$.fn.poshytip.defaults = {
 		content: 		'[title]',	// content to display ('[title]', 'string', element, function(updateCallback){...}, jQuery)
 		className:		'tip-yellow',	// class for the tips
+		idName:			'',		// id for the tip
 		bgImageFrameSize:	10,		// size in pixels for the background-image (if set in CSS) frame around the inner content of the tip
 		showTimeout:		500,		// timeout before showing the tip (in milliseconds 1000 == 1 second)
 		hideTimeout:		100,		// timeout before hiding the tip
